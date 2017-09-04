@@ -1,0 +1,9 @@
+.bootstrappy {
+    margin-top: 25px;
+}
+
+.bootstrappy-editor {
+    width: 100%;
+    max-width: 100%;
+    min-height: 600px;
+}

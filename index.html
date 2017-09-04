@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrappy : Bootstrap, but simpler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrappy.css" />
+</head>
+<body>
+<div>
+    <div class="container-fluid">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>Bootstrappy</h2>
+            <p class="lead">Write less code, do more with it</p>
+        </div>
+    </div>
+</div>
+
+<div class="bootstrappy">
+    <div class="container-fluid">
+        <div class="col-md-5 col-md-offset-1">
+            <textarea onkeydown="bootstrappify();" class="form-control bootstrappy-editor" placeholder="Write your Bootstrappy here and..."></textarea>
+        </div>
+
+        <div class="col-md-5">
+            <div class="well well-lg">
+                ...your HTML will come out here!
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/bootstrappy.js"></script>
+</html>
