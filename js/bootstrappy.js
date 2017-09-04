@@ -39,10 +39,32 @@ function bootstrappify() {
             classNames = classNames.substr(0, classNames.length - 1);
 
             markup += "<" + element + " class=\"" + classNames + "\">";
+        } else if(line.includes('#')) {
+            var sections = line.split(' ');
+            var query = sections[0];
+            query = query.replace('#', '');
+
+            if (isKnownElement(query)) {
+                var elm = "<" + query.toString() + ">";
+
+                for (var section = 1; section < sections.length; section++) {
+                    elm += sections[section] + ' ';
+                }
+
+                markup += elm;
+
+                markup += "</" + query.toString() + ">";
+            } else {
+                markup += line;
+            }
+        } else {
+            markup += line;
         }
     }
 
     result.text(markup);
+
+    //tidyUp();
 }
 
 function processSection(section) {
@@ -62,3 +84,34 @@ function checkEndTag(line) {
             return "";
     }
 }
+
+function isKnownElement(query) {
+    var elements = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
+
+    return elements.includes(query);
+}
+
+/*function tidyUp() {
+    options = {
+        "indent":"auto",
+        "indent-spaces":2,
+        "wrap":80,
+        "markup":true,
+        "output-xml":false,
+        "numeric-entities":true,
+        "quote-marks":true,
+        "quote-nbsp":false,
+        "show-body-only":true,
+        "quote-ampersand":false,
+        "break-before-br":true,
+        "uppercase-tags":false,
+        "uppercase-attributes":false,
+        "drop-font-tags":true,
+        "tidy-mark":false
+    };
+
+    var markup = $('.bootstrappy-result').text();
+    var result = tidy_html5(markup, options);
+
+    $('.bootstrappy-result').text(result);
+}*/
