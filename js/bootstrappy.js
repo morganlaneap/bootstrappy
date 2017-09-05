@@ -10,16 +10,17 @@ function bootstrappify() {
     var markup = "";
     var bootstrappy = editor.val();
     var lines = bootstrappy.split('\n');
+    var sections;
+    var classNames;
 
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
 
         // this is a bootstrappy class line
-        if (line.includes('@')) {
-            line = line.replace(/\s/g,'');
+        if (removeWhitespace(line).toString().startsWith('@')) {
+            line = removeWhitespace(line);
 
             var endTag = checkEndTag(line);
-
             if (endTag != "") {
                 markup += endTag;
                 continue;
@@ -27,25 +28,51 @@ function bootstrappify() {
 
             // we have a line to process
             // so split it into its sections
-            var sections = line.replace("@", "");
-            sections = sections.split(',');
+            sections = line.replace("@", "").split(',');
 
-            var classNames = "";
+            classNames = "";
 
             for (var section = 0; section < sections.length; section++) {
                 classNames += processSection(sections[section]);
             }
 
+            // remove the last bit of whitespace
             classNames = classNames.substr(0, classNames.length - 1);
 
             markup += "<" + element + " class=\"" + classNames + "\">";
-        } else if(line.includes('#')) {
-            var sections = line.split(' ');
+        } else if(removeWhitespace(line).toString().startsWith('#')) {
+            sections = line.split(' ');
             var query = sections[0];
+            classNames = '';
+            var hasClass = false;
+
             query = query.replace('#', '');
 
+            if (query.includes('->')) {
+                // we have a class modifier
+                hasClass = true;
+                var classes = query.split('>')[1];
+                classes = classes.split(',');
+
+                for (var c = 0; c < classes.length; c++) {
+                    classNames += processSection(classes[c]);
+                }
+
+                // remove the last bit of whitespace
+                classNames = classNames.substr(0, classNames.length - 1);
+
+                query = query.substr(0, query.indexOf('-'));
+            }
+
+
             if (isKnownElement(query)) {
-                var elm = "<" + query.toString() + ">";
+                var elm;
+
+                if (hasClass) {
+                    elm = "<" + query.toString() + " class=\"" + classNames + "\">";
+                } else {
+                    elm = "<" + query.toString() + ">";
+                }
 
                 for (var section = 1; section < sections.length; section++) {
                     elm += sections[section] + ' ';
@@ -89,6 +116,10 @@ function isKnownElement(query) {
     var elements = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
 
     return elements.includes(query);
+}
+
+function removeWhitespace(subject) {
+    return subject.replace(/\s/g,'');
 }
 
 /*function tidyUp() {
