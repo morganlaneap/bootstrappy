@@ -16,6 +16,11 @@ function bootstrappify() {
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
 
+        if (line == "\n") {
+            markup += line;
+            continue;
+        }
+
         // this is a bootstrappy class line
         if (removeWhitespace(line).toString().startsWith('@')) {
             line = removeWhitespace(line);
