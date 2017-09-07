@@ -12,6 +12,7 @@ function bootstrappify() {
     var lines = bootstrappy.split('\n');
     var sections;
     var classNames;
+    var id;
 
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
@@ -24,6 +25,12 @@ function bootstrappify() {
         // this is a bootstrappy class line
         if (removeWhitespace(line).toString().startsWith('@')) {
             line = removeWhitespace(line);
+
+            if (line.includes('[')) {
+                id = line.substr(line.indexOf('['), line.indexOf(']'));
+                line = line.replace(id, "");
+                id = id.replace('[', '').replace(']', '');
+            }
 
             var endTag = checkEndTag(line);
             if (endTag != "") {
@@ -44,8 +51,20 @@ function bootstrappify() {
             // remove the last bit of whitespace
             classNames = classNames.substr(0, classNames.length - 1);
 
-            markup += "<" + element + " class=\"" + classNames + "\">";
+            if (id != undefined) {
+                markup += "<" + element + " id=\"" + id + "\" class=\"" + classNames + "\">";
+            } else {
+                markup += "<" + element + " class=\"" + classNames + "\">";
+            }
+
+
         } else if(removeWhitespace(line).toString().startsWith('#')) {
+            if (line.includes('[')) {
+                id = line.substr(line.indexOf('['), line.indexOf(']') -1);
+                line = line.replace(id, "");
+                id = id.replace('[', '').replace(']', '');
+            }
+
             sections = line.split(' ');
             var query = sections[0];
             classNames = '';
@@ -74,9 +93,15 @@ function bootstrappify() {
                 var elm;
 
                 if (hasClass) {
-                    elm = "<" + query.toString() + " class=\"" + classNames + "\">";
+                    elm = "<" + query.toString() + " class=\"" + classNames + "\"";
                 } else {
-                    elm = "<" + query.toString() + ">";
+                    elm = "<" + query.toString();
+                }
+
+                if (id != undefined) {
+                  elm = elm + " id=\"" + id + "\">";
+                } else {
+                  elm = elm + ">";
                 }
 
                 for (var section = 1; section < sections.length; section++) {
@@ -92,10 +117,11 @@ function bootstrappify() {
         } else {
             markup += line;
         }
+
+        id = undefined;
     }
 
     result.text(markup);
-
     //tidyUp();
 }
 
@@ -118,7 +144,7 @@ function checkEndTag(line) {
 }
 
 function isKnownElement(query) {
-    var elements = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
+    var elements = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'label', 'span'];
 
     return elements.includes(query);
 }
