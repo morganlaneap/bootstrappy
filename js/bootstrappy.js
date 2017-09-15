@@ -122,7 +122,7 @@ function bootstrappify() {
     }
 
     result.text(markup);
-    //tidyUp();
+    tidyUp();
 }
 
 function processSection(section) {
@@ -153,7 +153,7 @@ function removeWhitespace(subject) {
     return subject.replace(/\s/g,'');
 }
 
-/*function tidyUp() {
+function tidyUp() {
     options = {
         "indent":"auto",
         "indent-spaces":2,
@@ -176,4 +176,4 @@ function removeWhitespace(subject) {
     var result = tidy_html5(markup, options);
 
     $('.bootstrappy-result').text(result);
-}*/
+}
